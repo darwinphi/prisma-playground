@@ -30,4 +30,22 @@ router.post("/", async (req, res) => {
   res.json(newPost);
 });
 
+router.get("/", async (req, res) => {
+  const posts = await post.findMany();
+
+  res.json(posts);
+});
+
+router.get("/:user_id", async (req, res) => {
+  const { user_id } = req.params;
+
+  const posts = await post.findMany({
+    where: {
+      user_id: parseInt(user_id),
+    },
+  });
+
+  res.json(posts);
+});
+
 export default router;
