@@ -16,4 +16,31 @@ router.get("/", async (req, res) => {
   res.json(users);
 });
 
+router.post("/", async (req, res) => {
+  const { username } = req.body;
+  const userExists = await user.findUnique({
+    where: {
+      username: username,
+    },
+    select: {
+      username: true,
+    },
+  });
+
+  if (userExists) {
+    userExists &&
+      res.status(400).json({
+        message: "Username already taken",
+      });
+  } else {
+    const newUser = await user.create({
+      data: {
+        username: username,
+      },
+    });
+
+    res.json(newUser);
+  }
+});
+
 export default router;
